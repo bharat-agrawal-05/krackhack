@@ -40,12 +40,12 @@ def get_data():
     else:
         return 'Error fetching data. Please try again.'
 
-@app.route('/status',methods=['GET'])
+@app.route('/get_data',methods=['GET'])
 def view_data():
     with open('stock_data.json', 'r') as file:
         data = json.load(file)
 
-    render_template('status.html', data=data)
+    return render_template('get_data.html', data=data)
 
 
 
