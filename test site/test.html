@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JavaScript to Python</title>
+</head>
+<body>
+
+<button onclick="callPythonScript()">Run Python Script</button>
+
+<script>
+function callPythonScript() {
+    fetch('scrape.py') // replace with the actual path to your Python script
+        .then(response => response.text())
+        .then(data => {
+            console.log(data); // handle the response from the Python script
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+</script>
+
+</body>
+</html>
