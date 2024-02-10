@@ -40,7 +40,7 @@ def get_data():
     else:
         return 'Error fetching data. Please try again.'
 
-@app.route('/view_data',methods=['GET'])
+@app.route('/status',methods=['GET'])
 def view_data():
     with open('stock_data.json', 'r') as file:
         data = json.load(file)

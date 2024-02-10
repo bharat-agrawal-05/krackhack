@@ -11,8 +11,8 @@
 <div class="m">
     <div class="menubar">
                 <ul>
-                    <li><a class="active up" href="../templates/index.html">Home</a></li>
-                    <li><a class="up" href="../templates/status.html">Status</a></li>
+                    <li><a class="active up" id="home">Home</a></li>
+                    <li><a class="up" id="status">Status</a></li>
                     <li><a class="up" >Contact</a></li>
                     <li><a class="up" >About</a></li>
                 </ul>
@@ -27,6 +27,38 @@
     </div>
 
     <script>
+        document.getElementById("home").addEventListener("click", function() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "/", true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == XMLHttpRequest.DONE) {
+                    if (xhr.status == 200) {
+                        document.open();
+                        document.write(xhr.responseText);
+                        document.close();
+                    } else {
+                        alert("Error fetching data. Please try again.");
+                    }
+                }
+            };
+        });
+
+        document.getElementById('status').addEventListener('onclick',function() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "/status", true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == XMLHttpRequest.DONE) {
+                    if (xhr.status == 200) {
+                        document.open();
+                        document.write(xhr.responseText);
+                        document.close();
+                    } else {
+                        alert("Error fetching data. Please try again.");
+                    }
+                }
+            };
+        });
+
         document.getElementById("stockForm").addEventListener("submit", function(event) {
             event.preventDefault(); // Prevent the form from submitting normally
             
