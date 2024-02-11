@@ -1,8 +1,95 @@
-from flask import Flask, render_template, request
-import requests,json
+from flask import Flask, render_template, request, redirect, url_for
+import json
+from flask import jsonify
+
+import requests
 from bs4 import BeautifulSoup
 
 app = Flask(__name__)
+from flask import redirect
+
+@app.route('/sell', methods=['POST'])
+def sell_stock():
+    try:
+        company_name = request.form['company_name']
+        quantity = int(request.form['quantity'])
+
+        with open('stock_data.json', 'r') as file:
+            data = json.load(file)
+
+        if 'status' not in data:
+            return 'Error: No stock data found.', 400
+
+        if company_name not in data['stocks']:
+            return 'Error: Company not found.', 400
+
+        if data['stocks'][company_name] is None:
+            return 'Error: Stock price unavailable.', 400
+
+        if quantity <= 0:
+            return 'Error: Invalid quantity.', 400
+
+        # Calculate the total value of the sold stocks
+        stock_price = float(data['stocks'][company_name].replace('\u20b9', '').replace(',', ''))
+        total_value = stock_price * quantity
+
+        # Deduct the sold stocks from the status
+        for idx, item in enumerate(data['status']):
+            if item['company_name'] == company_name:
+                remaining_quantity = int(item['quantity']) - quantity
+                if remaining_quantity <= 0:
+                    # Remove the entry if no remaining quantity
+                    del data['status'][idx]
+                else:
+                    # Update quantity if remaining quantity is positive
+                    data['status'][idx]['quantity'] = str(remaining_quantity)
+                break
+        else:
+            return 'Error: Company not found in status.', 400
+
+        # Add sold stocks to the sold_stocks list
+        if 'sold_stocks' not in data:
+            data['sold_stocks'] = []
+        data['sold_stocks'].append({'company_name': company_name, 'quantity_sold': quantity, 'total_price': total_value})
+
+        # Update balance (you'll need to have a balance key in your JSON data)
+        if 'balance' not in data:
+            data['balance'] = 0
+        data['balance'] += total_value
+
+        # Update the JSON file with the modified data
+        with open('stock_data.json', 'w') as file:
+            json.dump(data, file)
+
+        # Redirect to the status page
+        return redirect(url_for('view_data'))
+
+    except Exception as e:
+        return str(e), 500
+
+    finally:
+        # Clean up resources, if any
+        pass
+
+
+
+@app.route('/sold_stocks')
+def sold_stocks():
+    with open('stock_data.json', 'r') as file:
+        data = json.load(file)
+    sold_stocks = data.get('sold_stocks', [])
+    return render_template('sold_stocks.html', sold_stocks=sold_stocks)
+
+
+@app.route('/selling_log')
+def selling_log():
+    with open('stock_data.json', 'r') as file:
+        data = json.load(file)
+    selling_log = data.get('selling_log', [])
+    return render_template('selling_log.html', selling_log=selling_log)
+
+
+
 
 def get_stock_price(ticker):
     ticker=ticker.replace(" ","")  # Clean and convert ticker to uppercase
@@ -19,16 +106,28 @@ def get_stock_price(ticker):
     else:
         return f"Error fetching data for {ticker}. Please try again."
 
+@app.route('/get_current_price', methods=['POST'])
+def get_current_price():
+    try:
+        company_name = request.form['company_name']
+        current_price = get_stock_price(company_name)
+        if current_price:
+            return jsonify({'price': current_price})
+        else:
+            return jsonify({'error': f'Error fetching price for {company_name}'})
+    except Exception as e:
+        return jsonify({'error': str(e)})
+
 
 def write_to_json(ticker, price):
     try:
         with open('stock_data.json', 'r') as file:
             data = json.load(file)
-    except:
+    except FileNotFoundError:
         data = {"stocks": {}, "status": []}
 
-    if ticker.lower() not in data["stocks"]:  # Check for duplicate entries
-        data["stocks"][ticker.lower()] = price
+    if ticker not in data["stocks"]:  # Check for duplicate entries
+        data["stocks"][ticker] = price
 
     with open('stock_data.json', 'w') as file:
         json.dump(data, file)
@@ -46,14 +145,13 @@ def get_data():
     ticker = request.form['company_name']
     price = get_stock_price(ticker)
     if price:
-        print(price)
         write_to_json(ticker, price)
         return price
     else:
         return 'Error fetching data. Please try again.'
 
-@app.route('/b')
-def b():
+@app.route('/get_data',methods=['GET'])
+def view_data():
     with open('stock_data.json', 'r') as file:
         data = json.load(file)
 
@@ -68,7 +166,7 @@ def b():
 
     print(data)  # Print the data for inspection
 
-    return render_template('b.html', data=data)
+    return render_template('get_data.html', data=data)
 
 
 

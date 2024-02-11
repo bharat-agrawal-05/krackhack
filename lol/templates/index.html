@@ -5,27 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stock Price Checker</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='main.css') }}">
+    <style>
+        .m {
+            text-align: center;
+        }
+        .container {
+            margin: 0 auto;
+            display: inline-block;
+        }
+    </style>
 </head>
 <body>
-<div class="m">
-    <div class="menubar">
-                <ul>
-                    <li><a class="active up" id="home" href="{{ url_for('index')}}">Home</a></li>
-                    <li><a class="up" id="status" href="{{ url_for('b')}}">Status</a></li>
-                    <li><a class="up" >Contact</a></li>
-                    <li><a class="up" >About</a></li>
-                </ul>
-    </div>
-    <div class="container">
-        <h1>Stock Price Checker</h1>
-        <form id="stockForm">
-            <input type="text" id="companyName" placeholder="Enter Company Name">
-            <button type="submit">Check Price</button>
-        </form>
-        <div id="result"></div>
-        <div id="buyForm" style="display:none;">
-            <input type="number" id="quantity" placeholder="Enter Quantity">
-            <button id="buyButton">Buy</button>
+    <div class="m">
+        <div class="menubar">
+            <ul>
+                <li><a class="active up" id="home" href="{{ url_for('index')}}">Home</a></li>
+                <li><a class="up" id="status" href="{{ url_for('get_data')}}">Status</a></li>
+                <li><a class="up" id="sold" href="{{ url_for('sold_stocks')}}">Sold Stocks</a></li>
+                <li><a class="up" >Contact</a></li>
+                <li><a class="up" >About</a></li>
+            </ul>
+        </div>
+        <div class="container">
+            <h1>Stock Price Checker</h1>
+            <form id="stockForm">
+                <input type="text" id="companyName" placeholder="Enter Company Name">
+                <button type="submit">Check Price</button>
+            </form>
+            <div id="result"></div>
+            <div id="buyForm" style="display:none;">
+                <input type="number" id="quantity" placeholder="Enter Quantity">
+                <button id="buyButton">Buy</button>
+            </div>
         </div>
     </div>
 
@@ -70,7 +81,11 @@
             xhr.send("company_name=" + encodeURIComponent(companyName) + "&quantity=" + encodeURIComponent(quantity));
         });
     </script>
-    
-</div>
 </body>
 </html>
+
+
+
+    
+    
+

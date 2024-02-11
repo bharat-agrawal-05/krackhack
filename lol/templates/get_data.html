@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='main.css') }}">
+    <title>Stock Price Data</title>
+</head>
+<body>
+    <div class="m">
+        <div class="menubar">
+            <ul>
+                <li><a class="active up" id="home" href="{{ url_for('index')}}">Home</a></li>
+                <li><a class="up" id="status" href="{{ url_for('get_data')}}">Status</a></li>
+                <li><a class="up" id="sold" href="{{ url_for('sold_stocks')}}">Sold Stocks</a></li>
+                <li><a class="up" >Contact</a></li>
+                <li><a class="up" >About</a></li>
+            </ul>
+        </div>
+        <h1>Stock Price Data</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Company Name</th>
+                    <th>Quantity</th>
+                    <th>Bought Price</th>
+                    <th>Current Price</th>
+                    <th>Total Price</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in data.status %}
+                <tr>
+                    <td>{{ item.company_name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ data.stocks[item.company_name] | default(0) | float }}</td>
+                    <td class="current-price" data-company="{{ item.company_name }}">Loading...</td>
+                    <td>{{ (data.stocks[item.company_name] | default(0) | float) * (item.quantity | int) }}</td>
+                    <td>
+                        <form action="/sell" method="post">
+                            <input type="hidden" name="company_name" value="{{ item.company_name }}">
+                            <input type="hidden" name="quantity" value="{{ item.quantity }}">
+                            <button type="submit">Sell</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var currentPriceElements = document.querySelectorAll('.current-price');
+            currentPriceElements.forEach(function(element) {
+                var companyName = element.getAttribute('data-company');
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "/get_current_price", true);
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState == XMLHttpRequest.DONE) {
+                        if (xhr.status == 200) {
+                            var response = JSON.parse(xhr.responseText);
+                            element.textContent = response.price;
+                        } else {
+                            element.textContent = "Error fetching price";
+                        }
+                    }
+                };
+                xhr.send("company_name=" + encodeURIComponent(companyName));
+            });
+        });
+    </script>
+</body>
+</html>
