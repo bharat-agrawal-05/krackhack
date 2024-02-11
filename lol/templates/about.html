@@ -76,6 +76,20 @@
     </style>
 </head>
 <body>
+    <div class="circle-follower" id="circle-follower"></div>
+    <!-- Add the center point element -->
+    <div class="center-point"></div>
+    <script>
+        var circleFollower = document.getElementById('circle-follower');
+
+document.addEventListener("mousemove", function(event) {
+    var mouseX = event.clientX;
+    var mouseY = event.clientY;
+
+    circleFollower.style.left = mouseX + "px";
+    circleFollower.style.top = mouseY + "px";
+});
+    </script>
     <div class="m">
         <div class="menubar">
             <ul>

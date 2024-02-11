@@ -52,6 +52,9 @@
             </tbody>
         </table>
     </div>
+    <div class="circle-follower" id="circle-follower"></div>
+    <!-- Add the center point element -->
+    <div class="center-point"></div>
     
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -87,6 +90,16 @@
         setInterval(function () {
             window.location.reload();
         }, 50000);
+        var circleFollower = document.getElementById('circle-follower');
+
+        document.addEventListener("mousemove", function(event) {
+            var mouseX = event.clientX;
+            var mouseY = event.clientY;
+
+            circleFollower.style.left = mouseX + "px";
+            circleFollower.style.top = mouseY + "px";
+        });
+        
     </script>
 </body>
 </html>
