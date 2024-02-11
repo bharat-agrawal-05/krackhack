@@ -156,7 +156,6 @@ def about():
 def get_data():
     ticker = request.form['company_name']
     price = get_stock_price(ticker)
-    print(price)
     if price:
         write_to_json(ticker, price)
         return price
