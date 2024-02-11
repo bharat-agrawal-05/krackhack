@@ -12,7 +12,13 @@ body {
     background-size: 200% 200%;
     animation: slide 30s linear infinite;
 }
+.profit-green {
+    color: green;
+}
 
+.loss-red {
+    color:red;
+}
 @keyframes slide {
     0%, 100% {
         background-position: 0% 0%;

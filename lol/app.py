@@ -184,6 +184,9 @@ def b():
     except:
         return render_template('b.html', data={})
 
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
 
 
 

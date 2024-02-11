@@ -28,7 +28,7 @@ document.addEventListener("mousemove", function(event) {
                 <li><a class="up" id="status" href="{{ url_for('b')}}">Status</a></li>
                 <li><a class="up" id="sold" href="{{ url_for('sold_stocks')}}">Sold Stocks</a></li>
                 <li><a class="up" id="about" href="{{ url_for('about')}}">About</a></li>
-                <li><a class="up" >Contact</a></li>
+                <li><a class="up" id="contact" href="{{ url_for('contact')}}" >Contact</a></li>
             </ul>
         </div>
         <div class="container">
@@ -49,7 +49,7 @@ document.addEventListener("mousemove", function(event) {
                         <td>{{ item.company_name }}</td>
                         <td>{{ item.quantity_sold }}</td>
                         <td>₹{{ item.total_price | round(2)}}</td>
-                        <td>₹{{ item.profit_loss }}</td>
+                        <td class="{% if item.profit_loss >= 0 %}profit-green{% else %}loss-red{% endif %}">₹{{ item.profit_loss }}</td>
 
                     </tr>
                     {% endfor %}
