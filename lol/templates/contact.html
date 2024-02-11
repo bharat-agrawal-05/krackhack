@@ -39,6 +39,19 @@
             font-size: 1.2rem;
             color: white;
         }
+        .discord-button {
+            display: inline-block;
+            margin-top: 20px;
+            background-color: #7289DA;
+            color: #FFFFFF;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+        .discord-button:hover {
+            background-color: #5465AC;
+        }
     </style>
 </head>
 <body>
@@ -76,13 +89,18 @@ document.addEventListener("mousemove", function(event) {
             <!-- Names of people from left to right -->
             <div class="contact-names">
                 <ul>
+                    <li>|</li>
                     <li>Mohit Kumar |</li>
                     <li>Saurabh Singh |</li>
                     <li>Kaustubh Srivastava |</li>
                     <li>Bharat Agrawal</li>
+                    <li>|</li>
                     <!-- Add more names as needed -->
                 </ul>
             </div>
+            
+            <!-- Discord Button -->
+            <a href="https://discord.gg/qyfDqGPM" class="discord-button">Join our Discord Server</a>
         </div>
     </div>
 </body>
