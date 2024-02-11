@@ -12,21 +12,21 @@
             <ul>
                 <li><a class="active up" id="home" href="{{ url_for('index')}}">Home</a></li>
                 <li><a class="up" id="status" href="{{ url_for('get_data')}}">Status</a></li>
-                <li><a class="up" href="{{ url_for('sold_stocks') }}">Sold Stocks</a></li> <!-- Added Sold Stocks tab -->
+                <li><a class="up" id="sold" href="{{ url_for('sold_stocks')}}">Sold Stocks</a></li>
                 <li><a class="up" >Contact</a></li>
                 <li><a class="up" >About</a></li>
             </ul>
         </div>
         <h1>Stock Price Data</h1>
-        <table id="stockTable">
+        <table>
             <thead>
                 <tr>
                     <th>Company Name</th>
                     <th>Quantity</th>
-                    <th>Bought Stock Price</th>
-                    <th>Current Stock Price</th>
+                    <th>Bought Price</th>
+                    <th>Current Price</th>
                     <th>Total Price</th>
-                    <th>Profit/Loss</th> <!-- New column for profit/loss -->
+                    <th>Profit/Loss</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -36,9 +36,9 @@
                     <td>{{ item.company_name }}</td>
                     <td>{{ item.quantity }}</td>
                     <td>{{ data.stocks[item.company_name] | default(0) | float }}</td>
-                    <td id="currentPrice_{{ loop.index }}">Loading...</td> <!-- Placeholder for current price -->
+                    <td class="current-price" data-company="{{ item.company_name }}">Loading...</td>
                     <td>{{ (data.stocks[item.company_name] | default(0) | float) * (item.quantity | int) }}</td>
-                    <td id="profitLoss_{{ loop.index }}">Loading...</td> <!-- Placeholder for profit/loss -->
+                    <td class="profit-loss" data-company="{{ item.company_name }}">Calculating...</td>
                     <td>
                         <form action="/sell" method="post">
                             <input type="hidden" name="company_name" value="{{ item.company_name }}">
@@ -53,29 +53,30 @@
     </div>
     
     <script>
-        window.addEventListener('DOMContentLoaded', function () {
-            var rows = document.querySelectorAll('#stockTable tbody tr');
-            rows.forEach(function (row, index) {
-                var companyName = row.cells[0].innerText.trim();
+        document.addEventListener("DOMContentLoaded", function() {
+            var currentPriceElements = document.querySelectorAll('.current-price');
+            var profitLossElements = document.querySelectorAll('.profit-loss');
+            currentPriceElements.forEach(function(element) {
+                var companyName = element.getAttribute('data-company');
                 var xhr = new XMLHttpRequest();
                 xhr.open("POST", "/get_current_price", true);
                 xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
                 xhr.onreadystatechange = function() {
-                    if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
-                        var currentPrice = JSON.parse(xhr.responseText).price;
-                        row.querySelector('td[id^="currentPrice_"]').innerText = currentPrice;
-                        
-                        // Calculate profit/loss
-                        var boughtPrice = parseFloat(row.cells[2].innerText.replace('₹', '').trim());
-                        var quantity = parseInt(row.cells[1].innerText.trim());
-                        var totalPrice = parseFloat(row.cells[4].innerText.replace('₹', '').trim());
-                        var profitLoss = parseFloat(currentPrice.replace('₹', '').trim()) * quantity - totalPrice;
-
-                        row.querySelector('td[id^="profitLoss_"]').innerText = profitLoss.toFixed(2);
-                    } else {
-                        // If the request is still loading, show loading text
-                        row.querySelector('td[id^="currentPrice_"]').innerText = "Loading...";
-                        row.querySelector('td[id^="profitLoss_"]').innerText = "Loading...";
+                    if (xhr.readyState == XMLHttpRequest.DONE) {
+                        if (xhr.status == 200) {
+                            var response = JSON.parse(xhr.responseText);
+                            element.textContent = response.price;
+                            
+                            // Calculate profit/loss
+                            var boughtPrice = parseFloat(element.parentElement.querySelector('td:nth-child(3)').textContent);
+                            var quantity = parseInt(element.parentElement.querySelector('td:nth-child(2)').textContent);
+                            var totalPrice = parseFloat(element.parentElement.querySelector('td:nth-child(5)').textContent);
+                            var profitLoss = parseFloat(response.price.replace('₹', '')) * quantity - totalPrice;
+                            var profitLossElement = element.parentElement.querySelector('.profit-loss');
+                            profitLossElement.textContent = profitLoss.toFixed(2);
+                        } else {
+                            element.textContent = "Error fetching price";
+                        }
                     }
                 };
                 xhr.send("company_name=" + encodeURIComponent(companyName));
@@ -83,8 +84,7 @@
         });
         setInterval(function () {
             window.location.reload();
-        }, 6000);
+        }, 50000);
     </script>
-    
 </body>
 </html>

@@ -17,25 +17,27 @@
                 <li><a class="up" >About</a></li>
             </ul>
         </div>
-        <h1>Sold Stocks</h1>
-        <table>
-            <thead>
-                <tr>
-                    <th>Company Name</th>
-                    <th>Quantity Sold</th>
-                    <th>Total Price</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in sold_stocks %}
-                <tr>
-                    <td>{{ item.company_name }}</td>
-                    <td>{{ item.quantity_sold }}</td>
-                    <td>{{ item.total_price }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="container">
+            <h1>Sold Stocks</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Company Name</th>
+                        <th>Quantity Sold</th>
+                        <th>Total Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in sold_stocks %}
+                    <tr>
+                        <td>{{ item.company_name }}</td>
+                        <td>{{ item.quantity_sold }}</td>
+                        <td>{{ item.total_price }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </body>
 </html>

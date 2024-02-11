@@ -191,12 +191,5 @@ def store_buy():
         return 'Buy information stored successfully'
     except Exception as e:
         return str(e), 500
-
-
-
-
-
-
-
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True,port=8080)
