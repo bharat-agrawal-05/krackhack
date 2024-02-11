@@ -13,8 +13,8 @@
                 <li><a class="active up" id="home" href="{{ url_for('index')}}">Home</a></li>
                 <li><a class="up" id="status" href="{{ url_for('get_data')}}">Status</a></li>
                 <li><a class="up" id="sold" href="{{ url_for('sold_stocks')}}">Sold Stocks</a></li>
+                <li><a class="up" id="about" href="{{ url_for('about')}}">About</a></li>
                 <li><a class="up" >Contact</a></li>
-                <li><a class="up" >About</a></li>
             </ul>
         </div>
         <div class="container">
@@ -24,7 +24,9 @@
                     <tr>
                         <th>Company Name</th>
                         <th>Quantity Sold</th>
-                        <th>Total Price</th>
+                        <th>Invested Amount</th>
+                        <th>Profit/Loss Made</th>
+
                     </tr>
                 </thead>
                 <tbody>
@@ -32,7 +34,9 @@
                     <tr>
                         <td>{{ item.company_name }}</td>
                         <td>{{ item.quantity_sold }}</td>
-                        <td>{{ item.total_price }}</td>
+                        <td>₹{{ item.total_price | round(2)}}</td>
+                        <td>₹{{ item.profit_loss }}</td>
+
                     </tr>
                     {% endfor %}
                 </tbody>

@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 import json
 from flask import jsonify
+import random
 
 import requests
 from bs4 import BeautifulSoup
@@ -33,6 +34,10 @@ def sell_stock():
         stock_price = float(data['stocks'][company_name].replace('\u20b9', '').replace(',', ''))
         total_value = stock_price * quantity
 
+        # Calculate the profit/loss at the moment of selling
+        bought_price = float(data['stocks'][company_name].replace('\u20b9', '').replace(',', ''))
+        profit_loss = total_value - (bought_price * quantity)
+
         # Deduct the sold stocks from the status
         for idx, item in enumerate(data['status']):
             if item['company_name'] == company_name:
@@ -47,10 +52,10 @@ def sell_stock():
         else:
             return 'Error: Company not found in status.', 400
 
-        # Add sold stocks to the sold_stocks list
+        # Add sold stocks to the sold_stocks list along with profit/loss
         if 'sold_stocks' not in data:
             data['sold_stocks'] = []
-        data['sold_stocks'].append({'company_name': company_name, 'quantity_sold': quantity, 'total_price': total_value})
+        data['sold_stocks'].append({'company_name': company_name, 'quantity_sold': quantity, 'total_price': total_value, 'profit_loss': profit_loss})
 
         # Update balance (you'll need to have a balance key in your JSON data)
         if 'balance' not in data:
@@ -79,6 +84,7 @@ def sold_stocks():
         data = json.load(file)
     sold_stocks = data.get('sold_stocks', [])
     return render_template('sold_stocks.html', sold_stocks=sold_stocks)
+
 
 
 @app.route('/selling_log')
@@ -139,6 +145,9 @@ def write_to_json(ticker, price):
 @app.route('/')
 def index():
     return render_template('index.html')
+@app.route('/about')
+def about():
+    return render_template('about.html')
 
 @app.route('/get_data', methods=['POST'])
 def get_data():

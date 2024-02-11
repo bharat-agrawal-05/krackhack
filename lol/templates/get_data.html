@@ -13,8 +13,8 @@
                 <li><a class="active up" id="home" href="{{ url_for('index')}}">Home</a></li>
                 <li><a class="up" id="status" href="{{ url_for('get_data')}}">Status</a></li>
                 <li><a class="up" id="sold" href="{{ url_for('sold_stocks')}}">Sold Stocks</a></li>
+                <li><a class="up" id="about" href="{{ url_for('about')}}">About</a></li>
                 <li><a class="up" >Contact</a></li>
-                <li><a class="up" >About</a></li>
             </ul>
         </div>
         <h1>Stock Price Data</h1>
@@ -37,7 +37,8 @@
                     <td>{{ item.quantity }}</td>
                     <td>₹{{ data.stocks[item.company_name] | default(0) | float }}</td>
                     <td class="current-price" data-company="{{ item.company_name }}">Loading...</td>
-                    <td>₹{{ (data.stocks[item.company_name] | default(0) | float) * (item.quantity | int) }}</td>
+                    <td>₹{{ ((data.stocks[item.company_name] | default(0) | float) * (item.quantity | int)) | round(2) }}</td>
+
                     <td class="profit-loss" data-company="{{ item.company_name }}">Calculating...</td>
                     <td>
                         <form action="/sell" method="post">

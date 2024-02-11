@@ -6,13 +6,17 @@
     <title>Stock Price Checker</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='main.css') }}">
     <style>
-        .m {
-            text-align: center;
-        }
-        .container {
+        /* .container {
             margin: 0 auto;
             display: inline-block;
-        }
+        } */
+
+        /* New styles for the follower */
+        
+
+
+        /* Styles for the search bar */
+        
     </style>
 </head>
 <body>
@@ -30,7 +34,7 @@
             <h1>Stock Price Checker</h1>
             <form id="stockForm">
                 <input type="text" id="companyName" placeholder="Enter Company Name">
-                <button type="submit">Check Price</button>
+                <button type="submit" id="searchButton">Check Price</button>
             </form>
             <div id="result"></div>
             <div id="buyForm" style="display:none;">
@@ -40,9 +44,14 @@
         </div>
     </div>
 
+    <!-- Add the circle follower element -->
+    <div class="circle-follower" id="circle-follower"></div>
+    <!-- Add the center point element -->
+    <div class="center-point"></div>
+
     <script>
         document.getElementById("stockForm").addEventListener("submit", function(event) {
-            event.preventDefault(); // Prevent the form from submitting normally
+            event.preventDefault();
             
             var companyName = document.getElementById("companyName").value;
             var xhr = new XMLHttpRequest();
@@ -52,8 +61,8 @@
                 if (xhr.readyState == XMLHttpRequest.DONE) {
                     if (xhr.status == 200) {
                         document.getElementById("result").innerText = xhr.responseText;
-                        document.getElementById("buyForm").style.display = "block"; // Show buy form
-                        document.getElementById("buyButton").setAttribute("data-company", companyName); // Store company name in buy button
+                        document.getElementById("buyForm").style.display = "block";
+                        document.getElementById("buyButton").setAttribute("data-company", companyName);
                     } else {
                         alert("Error fetching data. Please try again.");
                     }
@@ -61,10 +70,10 @@
             };
             xhr.send("company_name=" + encodeURIComponent(companyName));
         });
-    
+
         document.getElementById("buyButton").addEventListener("click", function() {
             var quantity = document.getElementById("quantity").value;
-            var companyName = this.getAttribute("data-company"); // Retrieve company name from buy button
+            var companyName = this.getAttribute("data-company");
     
             var xhr = new XMLHttpRequest();
             xhr.open("POST", "/store_buy", true);
@@ -72,7 +81,7 @@
             xhr.onreadystatechange = function() {
                 if (xhr.readyState == XMLHttpRequest.DONE) {
                     if (xhr.status == 200) {
-                        alert(xhr.responseText); // Alert success message
+                        alert(xhr.responseText);
                     } else {
                         alert("Error storing buy information. Please try again.");
                     }
@@ -80,12 +89,17 @@
             };
             xhr.send("company_name=" + encodeURIComponent(companyName) + "&quantity=" + encodeURIComponent(quantity));
         });
+
+        // Add the mouse follower script
+        var circleFollower = document.getElementById('circle-follower');
+
+        document.addEventListener("mousemove", function(event) {
+            var mouseX = event.clientX;
+            var mouseY = event.clientY;
+
+            circleFollower.style.left = mouseX + "px";
+            circleFollower.style.top = mouseY + "px";
+        });
     </script>
 </body>
 </html>
-
-
-
-    
-    
-

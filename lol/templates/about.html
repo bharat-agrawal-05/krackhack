@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Stock Market Simulation</title>
+    <link rel="stylesheet" href="main.css"> <!-- Linking the main.css file -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='main.css') }}">
+    <style>
+        /* Additional CSS styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: #1f1f1f;
+            color: #fff;
+            align-items: center;
+            justify-content: center;
+        }
+        .menubar ul {
+    list-style-type: none;
+    margin: 0;
+}
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #61dafb;
+        }
+
+        p, li, h2 {
+            color: #ccc;
+        }
+
+        ul {
+            list-style-type: disc;
+            margin-left: 20px;
+            color: #666;
+        }
+
+        ol {
+            list-style-type: decimal;
+            margin-left: 20px;
+            color: #666;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            color: #fff;
+        }
+
+        thead {
+            background-color: #333;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #444;
+        }
+
+        tbody tr:hover {
+            background-color: #444;
+        }
+    </style>
+</head>
+<body>
+    <div class="m">
+        <div class="menubar">
+            <ul>
+                <li><a class="active up" id="home" href="{{ url_for('index')}}">Home</a></li>
+                <li><a class="up" id="status" href="{{ url_for('get_data')}}">Status</a></li>
+                <li><a class="up" id="sold" href="{{ url_for('sold_stocks')}}">Sold Stocks</a></li>
+                <li><a class="up" id="about" href="{{ url_for('about')}}">About</a></li>
+                <li><a class="up" >Contact</a></li>
+            </ul>
+        </div>
+        <div class="container">
+            <h1>About Us - Stock Market Simulation</h1>
+            <p>Welcome to our website!</p>
+
+            <h2>Our Vision</h2>
+            <p>Our project is a simulation of the real-world stock market, designed to provide users with an engaging and educational experience. We envision our platform as a game-like environment where users can learn, practice, and master the art of stock trading.</p>
+
+            <h2>Game-Based Learning</h2>
+            <p>At our core, we believe that learning should be fun and interactive. That's why we've developed our stock market simulation as a game, offering users an immersive and enjoyable way to explore the world of finance. By gamifying the learning process, we aim to make complex financial concepts more accessible and engaging for users of all levels.</p>
+
+            <h2>How It Works</h2>
+            <p>Our simulation platform provides users with virtual funds to invest in real-time stocks and securities. Users can create their own portfolios, experiment with different trading strategies, and compete with friends or other users in simulated trading competitions. With access to comprehensive market data and analysis tools, users can make informed decisions and track their progress over time.</p>
+
+            <p>To get started:</p>
+            <ol>
+                <li>In the "Home" tab, search for a stock in the NSE (National Stock Exchange) to check its real-time price.</li>
+                <li>If you decide to buy the stock, select the quantity and click the "Buy" button.</li>
+                <li>Go to the "Status" tab to see all the stocks you have acquired, their quantity, the price at which you bought them, their current price, and how much profit or loss you are making. You will also find the option to sell the stocks.</li>
+                <li>Under the "Sold Stocks" tab, you can see the stocks you sold and the profit/loss you made on the sale.</li>
+                <li>For any inquiries or assistance, please feel free to contact us.</li>
+                <li>You will find ways to reach us under the "Contact" tab.</li>
+            </ol>
+
+            <h2>Why Choose Us</h2>
+            <ul>
+                <li>Interactive and engaging learning experience</li>
+                <li>Realistic simulation of the stock market</li>
+                <li>No financial risk for users</li>
+                <li>Opportunity to practice trading strategies in a safe environment</li>
+                <li>Community features for collaboration and competition</li>
+                <li>User-friendly interface and intuitive design</li>
+            </ul>
+
+            <h2>Get Started</h2>
+            <p>Ready to level up your stock trading skills? Embark on your journey to becoming a savvy investor today!</p>
+
+            <!-- You can add any additional content or sections here -->
+        </div>
+    </div>
+</body>
+</html>
