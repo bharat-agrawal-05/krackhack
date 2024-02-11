@@ -67,7 +67,7 @@ def sell_stock():
             json.dump(data, file)
 
         # Redirect to the status page
-        return redirect(url_for('view_data'))
+        return redirect(url_for('b'))
 
     except Exception as e:
         return str(e), 500
@@ -80,10 +80,13 @@ def sell_stock():
 
 @app.route('/sold_stocks')
 def sold_stocks():
-    with open('stock_data.json', 'r') as file:
-        data = json.load(file)
-    sold_stocks = data.get('sold_stocks', [])
-    return render_template('sold_stocks.html', sold_stocks=sold_stocks)
+    try:
+        with open('stock_data.json', 'r') as file:
+            data = json.load(file)
+        sold_stocks = data.get('sold_stocks', [])
+        return render_template('sold_stocks.html', sold_stocks=sold_stocks)
+    except:
+        return render_template('sold_stocks.html', sold_stocks=[])
 
 
 
@@ -129,7 +132,7 @@ def write_to_json(ticker, price):
     try:
         with open('stock_data.json', 'r') as file:
             data = json.load(file)
-    except FileNotFoundError:
+    except:
         data = {"stocks": {}, "status": []}
 
     if ticker not in data["stocks"]:  # Check for duplicate entries
@@ -153,29 +156,33 @@ def about():
 def get_data():
     ticker = request.form['company_name']
     price = get_stock_price(ticker)
+    print(price)
     if price:
         write_to_json(ticker, price)
         return price
     else:
         return 'Error fetching data. Please try again.'
 
-@app.route('/get_data',methods=['GET'])
-def view_data():
-    with open('stock_data.json', 'r') as file:
-        data = json.load(file)
+@app.route('/b',methods=['GET'])
+def b():
+    try:
+        with open('stock_data.json', 'r') as file:
+            data = json.load(file)
 
-    # Convert stock prices to float and handle missing or invalid prices
-    for company, price in data['stocks'].items():
-        if price.isdigit():
-            data['stocks'][company] = float(price)
-        elif price.startswith("₹"):  # Handle prices in Indian Rupees format
-            data['stocks'][company] = float(price[1:].replace(',', ''))
-        else:
-            data['stocks'][company] = None  # Set price to None for invalid or missing prices
+        # Convert stock prices to float and handle missing or invalid prices
+        for company, price in data['stocks'].items():
+            if price.isdigit():
+                data['stocks'][company] = float(price)
+            elif price.startswith("₹"):  # Handle prices in Indian Rupees format
+                data['stocks'][company] = float(price[1:].replace(',', ''))
+            else:
+                data['stocks'][company] = None  # Set price to None for invalid or missing prices
 
-    print(data)  # Print the data for inspection
+        print(data)  # Print the data for inspection
 
-    return render_template('get_data.html', data=data)
+        return render_template('b.html', data=data)
+    except:
+        return render_template('b.html', data={})
 
 
 
