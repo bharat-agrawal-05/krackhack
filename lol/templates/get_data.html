@@ -35,9 +35,9 @@
                 <tr>
                     <td>{{ item.company_name }}</td>
                     <td>{{ item.quantity }}</td>
-                    <td>{{ data.stocks[item.company_name] | default(0) | float }}</td>
+                    <td>₹{{ data.stocks[item.company_name] | default(0) | float }}</td>
                     <td class="current-price" data-company="{{ item.company_name }}">Loading...</td>
-                    <td>{{ (data.stocks[item.company_name] | default(0) | float) * (item.quantity | int) }}</td>
+                    <td>₹{{ (data.stocks[item.company_name] | default(0) | float) * (item.quantity | int) }}</td>
                     <td class="profit-loss" data-company="{{ item.company_name }}">Calculating...</td>
                     <td>
                         <form action="/sell" method="post">
@@ -70,10 +70,11 @@
                             // Calculate profit/loss
                             var boughtPrice = parseFloat(element.parentElement.querySelector('td:nth-child(3)').textContent);
                             var quantity = parseInt(element.parentElement.querySelector('td:nth-child(2)').textContent);
-                            var totalPrice = parseFloat(element.parentElement.querySelector('td:nth-child(5)').textContent);
+                            var totalPrice = parseFloat(element.parentElement.querySelector('td:nth-child(5)').textContent.replace("₹",""));
                             var profitLoss = parseFloat(response.price.replace('₹', '')) * quantity - totalPrice;
                             var profitLossElement = element.parentElement.querySelector('.profit-loss');
                             profitLossElement.textContent = profitLoss.toFixed(2);
+                            profitLossElement.textContent = "₹" + profitLoss.toFixed(2);
                         } else {
                             element.textContent = "Error fetching price";
                         }
