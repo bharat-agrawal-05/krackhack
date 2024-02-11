@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 app = Flask(__name__)
 
 def get_stock_price(ticker):
-    ticker=ticker.replace(" ","")  # Clean and convert ticker to uppercase
+    ticker = ticker.strip().upper()  # Clean and convert ticker to uppercase
     url = f'https://www.google.com/finance/quote/{ticker}:NSE'
     response = requests.get(url)
     if response.status_code == 200:
@@ -20,15 +20,16 @@ def get_stock_price(ticker):
         return f"Error fetching data for {ticker}. Please try again."
 
 
+
 def write_to_json(ticker, price):
     try:
         with open('stock_data.json', 'r') as file:
             data = json.load(file)
-    except:
+    except FileNotFoundError:
         data = {"stocks": {}, "status": []}
 
-    if ticker.lower() not in data["stocks"]:  # Check for duplicate entries
-        data["stocks"][ticker.lower()] = price
+    if ticker not in data["stocks"]:  # Check for duplicate entries
+        data["stocks"][ticker] = price
 
     with open('stock_data.json', 'w') as file:
         json.dump(data, file)
@@ -46,32 +47,17 @@ def get_data():
     ticker = request.form['company_name']
     price = get_stock_price(ticker)
     if price:
-        print(price)
         write_to_json(ticker, price)
         return price
     else:
         return 'Error fetching data. Please try again.'
 
-@app.route('/b')
-def b():
+@app.route('/get_data',methods=['GET'])
+def view_data():
     with open('stock_data.json', 'r') as file:
         data = json.load(file)
 
-    # Convert stock prices to float and handle missing or invalid prices
-    for company, price in data['stocks'].items():
-        if price.isdigit():
-            data['stocks'][company] = float(price)
-        elif price.startswith("₹"):  # Handle prices in Indian Rupees format
-            data['stocks'][company] = float(price[1:].replace(',', ''))
-        else:
-            data['stocks'][company] = None  # Set price to None for invalid or missing prices
-
-    print(data)  # Print the data for inspection
-
-    return render_template('b.html', data=data)
-
-
-
+    return render_template('get_data.html', data=data)
 
 @app.route('/store_buy', methods=['POST'])
 def store_buy():

@@ -11,7 +11,7 @@
     <div class="menubar">
                 <ul>
                     <li><a class="active up" id="home" href="{{ url_for('index')}}">Home</a></li>
-                    <li><a class="up" id="status" href="{{ url_for('get_data')}}">Status</a></li>
+                    <li><a class="up" id="status" href="{{ url_for('b')}}">Status</a></li>
                     <li><a class="up" >Contact</a></li>
                     <li><a class="up" >About</a></li>
                 </ul>
@@ -23,10 +23,13 @@
             <button type="submit">Check Price</button>
         </form>
         <div id="result"></div>
+        <div id="buyForm" style="display:none;">
+            <input type="number" id="quantity" placeholder="Enter Quantity">
+            <button id="buyButton">Buy</button>
+        </div>
     </div>
 
     <script>
-        
         document.getElementById("stockForm").addEventListener("submit", function(event) {
             event.preventDefault(); // Prevent the form from submitting normally
             
@@ -38,6 +41,8 @@
                 if (xhr.readyState == XMLHttpRequest.DONE) {
                     if (xhr.status == 200) {
                         document.getElementById("result").innerText = xhr.responseText;
+                        document.getElementById("buyForm").style.display = "block"; // Show buy form
+                        document.getElementById("buyButton").setAttribute("data-company", companyName); // Store company name in buy button
                     } else {
                         alert("Error fetching data. Please try again.");
                     }
@@ -45,7 +50,27 @@
             };
             xhr.send("company_name=" + encodeURIComponent(companyName));
         });
+    
+        document.getElementById("buyButton").addEventListener("click", function() {
+            var quantity = document.getElementById("quantity").value;
+            var companyName = this.getAttribute("data-company"); // Retrieve company name from buy button
+    
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/store_buy", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == XMLHttpRequest.DONE) {
+                    if (xhr.status == 200) {
+                        alert(xhr.responseText); // Alert success message
+                    } else {
+                        alert("Error storing buy information. Please try again.");
+                    }
+                }
+            };
+            xhr.send("company_name=" + encodeURIComponent(companyName) + "&quantity=" + encodeURIComponent(quantity));
+        });
     </script>
+    
 </div>
 </body>
 </html>

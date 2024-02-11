@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='main.css') }}">
+    <title>Stock Price Data</title>
+</head>
+<body>
+    <div class="m">
+        <div class="menubar">
+            <ul>
+                <li><a class="active up" id="home" href="{{ url_for('index')}}">Home</a></li>
+                <li><a class="up" id="status" href="{{ url_for('b')}}">Status</a></li>
+                <li><a class="up" >Contact</a></li>
+                <li><a class="up" >About</a></li>
+            </ul>
+        </div>
+        <h1>Stock Price Data</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Company Name</th>
+                    <th>Quantity</th>
+                    <th>Stock Price</th>
+                    <th>Total Price</th> <!-- New column for total price -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in data.status %}
+                <tr>
+                    <td>{{ item.company_name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ data.stocks[item.company_name] | default(0) | float }}</td> <!-- Convert stock price to float -->
+                    <td>{{ (data.stocks[item.company_name] | default(0) | float) * (item.quantity | int) }}</td> <!-- Calculate total price -->
+ <!-- Calculate total price -->
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
