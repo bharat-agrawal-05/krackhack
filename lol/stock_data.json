@@ -1,0 +1,1 @@
+{"stocks": {"adani green": "\u20b91,880.85", "paytm": "\u20b9419.15"}, "status": [], "sold_stocks": [{"company_name": "adani green", "quantity_sold": 200, "total_price": 376170.0, "profit_loss": 0.0}, {"company_name": "paytm", "quantity_sold": 10, "total_price": 4191.5, "profit_loss": 0.0}], "balance": 380361.5}
