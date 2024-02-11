@@ -72,13 +72,15 @@
                             element.textContent = response.price;
                             
                             // Calculate profit/loss
-                            var boughtPrice = parseFloat(element.parentElement.querySelector('td:nth-child(3)').textContent);
+                            // Calculate profit/loss
+                            var boughtPrice = parseFloat(element.parentElement.querySelector('td:nth-child(3)').textContent.replace(/[^0-9.-]+/g,""));
                             var quantity = parseInt(element.parentElement.querySelector('td:nth-child(2)').textContent);
-                            var totalPrice = parseFloat(element.parentElement.querySelector('td:nth-child(5)').textContent.replace("₹",""));
-                            var profitLoss = parseFloat(response.price.replace('₹', '')) * quantity - totalPrice;
+                            var totalPrice = parseFloat(element.parentElement.querySelector('td:nth-child(5)').textContent.replace("₹","").replace(/[^0-9.-]+/g,""));
+                            var currentPrice = parseFloat(response.price.replace("₹","").replace(/[^0-9.-]+/g,"")); // Removing non-numeric characters
+                            var profitLoss = currentPrice * quantity - totalPrice;
                             var profitLossElement = element.parentElement.querySelector('.profit-loss');
-                            profitLossElement.textContent = profitLoss.toFixed(2);
                             profitLossElement.textContent = "₹" + profitLoss.toFixed(2);
+
                         } else {
                             element.textContent = "Error fetching price";
                         }
