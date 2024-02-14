@@ -158,7 +158,7 @@ def index():
 
     except:
         
-        return render_template('index.html',data=0)
+        return render_template('index.html',data={'balance':0})
 
 @app.route('/about')
 def about():
