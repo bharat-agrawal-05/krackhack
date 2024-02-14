@@ -33,7 +33,6 @@ def sell_stock():
         # Calculate the total value of the sold stocks
         # stock_price = float(data['stocks'][company_name].replace('\u20b9', '').replace(',', ''))
         stock_price = float((get_stock_price(company_name)).replace('₹', '').replace(',', ''))
-        print(type(stock_price),stock_price)
         total_value = stock_price * quantity
 
 
@@ -64,7 +63,7 @@ def sell_stock():
         if 'balance' not in data:
             data['balance'] = 0
         data['balance'] += profit_loss
-        print(data['balance'])
+        # print(data['balance'])
 
         # Update the JSON file with the modified data
         with open('stock_data.json', 'w') as file:
@@ -151,7 +150,16 @@ def write_to_json(ticker, price):
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    try:
+        with open('stock_data.json', 'r') as file:
+            data = json.load(file)
+        # print(data.get('balance', 0))
+        return render_template('index.html',data={'balance':data.get('balance', 0)})
+
+    except:
+        
+        return render_template('index.html',data=0)
+
 @app.route('/about')
 def about():
     return render_template('about.html')
@@ -181,7 +189,7 @@ def b():
             else:
                 data['stocks'][company] = None  # Set price to None for invalid or missing prices
 
-        print(data)  # Print the data for inspection
+        # print(data)  # Print the data for inspection
 
         return render_template('b.html', data=data)
     except:
@@ -208,9 +216,6 @@ def store_buy():
         data['status'].append({'company_name': company_name, 'quantity': quantity})
 
         with open('stock_data.json', 'w') as file:
-            json.dump(data, file)
-
-        with open('initial_data.json', 'w') as file:
             json.dump(data, file)
 
         return 'Buy information stored successfully'

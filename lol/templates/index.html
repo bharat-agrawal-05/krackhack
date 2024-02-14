@@ -5,19 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stock Price Checker</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='main.css') }}">
-    <style>
-        /* .container {
-            margin: 0 auto;
-            display: inline-block;
-        } */
 
-        /* New styles for the follower */
-        
-
-
-        /* Styles for the search bar */
-        
-    </style>
 </head>
 <body>
     <div class="m">
@@ -32,6 +20,11 @@
         </div>
         <div class="container">
             <h1 >SimuTradeX</h1>
+            <div class="bal">
+                <h3>
+                    Your Balance: ₹{{ data.balance | round(2) }}
+                </h3>
+            </div>
             <form id="stockForm">
                 <input type="text" id="companyName" placeholder="Enter Company Name">
                 <button type="submit" id="searchButton">Check Price</button>
