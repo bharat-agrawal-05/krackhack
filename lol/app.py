@@ -31,8 +31,11 @@ def sell_stock():
             return 'Error: Invalid quantity.', 400
 
         # Calculate the total value of the sold stocks
-        stock_price = float(data['stocks'][company_name].replace('\u20b9', '').replace(',', ''))
+        # stock_price = float(data['stocks'][company_name].replace('\u20b9', '').replace(',', ''))
+        stock_price = float((get_stock_price(company_name)).replace('₹', '').replace(',', ''))
+        print(type(stock_price),stock_price)
         total_value = stock_price * quantity
+
 
         # Calculate the profit/loss at the moment of selling
         bought_price = float(data['stocks'][company_name].replace('\u20b9', '').replace(',', ''))
@@ -60,7 +63,8 @@ def sell_stock():
         # Update balance (you'll need to have a balance key in your JSON data)
         if 'balance' not in data:
             data['balance'] = 0
-        data['balance'] += total_value
+        data['balance'] += profit_loss
+        print(data['balance'])
 
         # Update the JSON file with the modified data
         with open('stock_data.json', 'w') as file:
@@ -204,6 +208,9 @@ def store_buy():
         data['status'].append({'company_name': company_name, 'quantity': quantity})
 
         with open('stock_data.json', 'w') as file:
+            json.dump(data, file)
+
+        with open('initial_data.json', 'w') as file:
             json.dump(data, file)
 
         return 'Buy information stored successfully'

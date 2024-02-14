@@ -49,7 +49,7 @@ document.addEventListener("mousemove", function(event) {
                         <td>{{ item.company_name }}</td>
                         <td>{{ item.quantity_sold }}</td>
                         <td>₹{{ item.total_price | round(2)}}</td>
-                        <td class="{% if item.profit_loss >= 0 %}profit-green{% else %}loss-red{% endif %}">₹{{ item.profit_loss }}</td>
+                        <td class="{% if item.profit_loss >= 0 %}profit-green{% else %}loss-red{% endif %}">₹{{ item.profit_loss | round(2)}}</td>
 
                     </tr>
                     {% endfor %}
